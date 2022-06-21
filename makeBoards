@@ -1,0 +1,36 @@
+
+function makePlayerBoard(){
+  const board = document.querySelector('.playerBoard')
+  for(let i=0; i<100; i++){const tile = document.createElement('div')
+  tile.classList.add('tile')
+  tile.setAttribute('data','player')
+  tile.setAttribute('id', i)
+  board.appendChild(tile)
+  tile.addEventListener('mouseover', (e) => {
+    tile.style.backgroundColor = 'gray'
+   })
+   tile.addEventListener('mouseleave', (e) =>{
+     tile.style.backgroundColor = 'lightgray'
+   })
+}}
+
+function makeAIBoard(){
+  const board = document.querySelector('.AIBoard')
+  for(let i=100; i<200; i++){const tile = document.createElement('div')
+  tile.classList.add('tile')
+  tile.setAttribute('data','AI')
+  tile.setAttribute('id', i)
+  board.appendChild(tile)
+  tile.addEventListener('mouseover', (e) => {
+   tile.style.backgroundColor = 'gray'
+  })
+  tile.addEventListener('mouseleave', (e) =>{
+    tile.style.backgroundColor = 'lightgray'
+  })
+}}
+function makeBoards(){
+makePlayerBoard();
+makeAIBoard();
+}
+
+export {makeBoards}
