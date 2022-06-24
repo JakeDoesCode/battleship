@@ -1,12 +1,25 @@
-import { shipyardOne, shipyardTwo } from './script';
+import { playerFleet, AIFleet} from './src/index';
 
 test('Battleship afloat', () => {
-  expect(shipyardOne.battleShip.shipSink).toBeFalsy();
+  expect(playerFleet.battleShip.shipSink).toBeFalsy();
 });
 
-test('Battleship sunk', () => {
-  expect(shipyardOne.destroyer.shipSink).toBeTruthy();
+test('Destroyer Afloat', () => {
+  expect(AIFleet.destroyer.shipSink).toBeFalsy();
 });
-test('Still Alive', () => {
-  expect(shipyardTwo.destroyer.shipSink).toBeTruthy();
+
+test('AI patrol boat has been sunk', () => {
+  expect(AIFleet.patrolBoat.shipSink).toBeTruthy();
+});
+
+
+test('Player Carrier Hit', () => {
+  expect(playerFleet.carrier.shipHit).toBeTruthy();
+});
+
+test('Player Patrol Boat alive', () => {
+  expect(playerFleet.patrolBoat.shipSink).toBeFalsy();
+});
+test('Battleship struck twice', () => {
+  expect(AIFleet.battleShip.shipHit).toBe(2);
 });
