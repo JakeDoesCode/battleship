@@ -1,15 +1,17 @@
-import { makePlayerBoard, makeAIBoard} from './modules/gameBoard';
+import { makePlayerBoard, makeAIBoard, checkSpace, placeShips } from './modules/gameBoard';
 import { newFleet } from './modules/shipFactory';
+
 const playerFleet = newFleet();
 const AIFleet = newFleet();
 
-makePlayerBoard();
-makeAIBoard()
-
+// makePlayerBoard();
+// makeAIBoard();
+placeShips()
+checkSpace()
 //! FOR TESTS
-playerFleet.carrier.hit();
-AIFleet.battleShip.hit();
-AIFleet.battleShip.hit();
-AIFleet.patrolBoat.sunk();
+playerFleet[0].hit();
+AIFleet[1].hit();
+AIFleet[1].hit();
+AIFleet[4].sunk();
 
 export { playerFleet, AIFleet };

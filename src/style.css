@@ -5,8 +5,8 @@
   justify-content: space-evenly;
   align-items: center;
 }
-.legend{
-  display:grid;
+.legend {
+  display: grid;
   grid-template-columns: 50px 500px;
   grid-template-rows: 500px 50px;
 }
@@ -18,27 +18,27 @@
   height: 500px;
   border: 1px black solid;
 }
-.vertical{
+.vertical {
   display: grid;
-  grid-template-rows: repeat(10,1fr);
+  grid-template-rows: repeat(10, 1fr);
 }
-.yAxis{
+.yAxis {
   font-weight: 900;
   font-size: 1.5em;
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
 }
-.horizontal{
+.horizontal {
   grid-column: 2/3;
-  display:grid;
-  grid-template-columns: repeat(10,1fr);
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
 }
 
-.xAxis{
+.xAxis {
   font-weight: 900;
   font-size: 1.5em;
-  display:flex;
+  display: flex;
   margin-top: 5px;
   justify-content: center;
 }
@@ -54,6 +54,9 @@
   border: 1px black solid;
   background-color: rgb(10, 186, 240);
 }
-.tile:hover{
-    background-color:lightblue
+.tile:hover {
+  background-color: lightblue;
+}
+.h{
+  background-color: red;
 }
