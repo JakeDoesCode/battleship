@@ -3,15 +3,6 @@ import { AIFleet } from '..';
 let randomPlacement = Math.floor(Math.random() * 10 + 1).toString();
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 let randomChar = letters[Math.floor(Math.random() * letters.length)];
-// Generates a new random letter
-function newNum() {
-  return (randomPlacement = Math.floor(Math.random() * 10 + 1).toString());
-}
-// Generates a new random letter
-function newLetter() {
-  return (randomChar = letters[Math.floor(Math.random() * letters.length)]);
-}
-//creates board 10 rows of 10 with a label for each row/column
 function makePlayerBoard() {
   const board = document.querySelector('.playerBoard');
   for (let i = 1; i < 11; i++) {
@@ -150,6 +141,17 @@ function makeAIBoard() {
     board.appendChild(tile);
   }
 }
+
+// Generates a new random letter
+function newNum() {
+  return (randomPlacement = Math.floor(Math.random() * 10 + 1).toString());
+}
+// Generates a new random letter
+function newLetter() {
+  return (randomChar = letters[Math.floor(Math.random() * letters.length)]);
+}
+//creates board 10 rows of 10 with a label for each row/column
+
 //randomly assigns a direction (vertical (false) or horizontal (true))
 function orientation() {
   let direction = Math.floor(Math.random() * 100);
@@ -161,74 +163,27 @@ function orientation() {
 }
 
 // checks to see if shiphealth is equal to the amount of tiles assigned in location array
-function shipPlaced() {
-  for (let i = 0; AIFleet[i].length > i; i++)
-    return AIFleet[i].location.length == AIFleet[i].shipHealth ? true : false;
-}
-
-function checkSpace(randomChar, randomPlacement) {
-  if (AIFleet[0].location.includes(randomChar + randomPlacement)) {
-    return true;
-  } else if (AIFleet[1].location.includes(randomChar + randomPlacement)) {
-    return true;
-  } else if (AIFleet[2].location.includes(randomChar + randomPlacement)) {
-    return true;
-  } else if (AIFleet[3].location.includes(randomChar + randomPlacement)) {
-    return true;
-  } else if (AIFleet[4].location.includes(randomChar + randomPlacement)) {
+function shipsPlaced() {
+  if (
+    AIFleet[0].location.length == 5 &&
+    AIFleet[1].location.length == 4 &&
+    AIFleet[2].location.length == 3 &&
+    AIFleet[3].location.length == 3 &&
+    AIFleet[4].location.length == 2
+  ) {
     return true;
   } else {
+    console.log(AIFleet[0].location.length,
+      AIFleet[1].location.length,
+      AIFleet[2].location.length,
+      AIFleet[3].location.length,
+      AIFleet[4].location.length )
     return false;
   }
 }
+// For every arg item I want to loop through every AIFleet item and check
+//  if an array of coordinates inside that AIFleet includes the arg item.
+// If that happens any one time, I want to return true.
+// If the loop ends and I didn't return true, I want to return false.
 
-// assign tiles based on x/y axis to specific ships within the AI Fleet array
-function placeShips() {
-  let placement = true;
-  //places all ships in the AIFleet
-  for (let i = 0; i < AIFleet.length; i++) {
-    //loops over until conditions are met and ships are placed in valid locations
-    do {
-      newLetter();
-      newNum();
-      orientation();
-      let tempChar = letters.indexOf(randomChar);
-      if (orientation() && randomPlacement < 10) {
-        for (let n = 0; n < AIFleet[i].shipHealth; n++) {
-          if (
-            randomChar > 10 ||
-            tempChar > 10 ||
-            randomPlacement > 10
-          ) {
-            AIFleet[i].location = [];
-            placement = false;
-          } else {
-            AIFleet[i].location.push(randomChar + randomPlacement++);
-            placement = true;
-          }
-        }
-      } else if (!orientation() && tempChar < 9) {
-        for (let n = 0; n < AIFleet[i].shipHealth; n++) {
-          let updatedChar = letters[tempChar];
-          if (
-            tempChar > 9 ||
-            updatedChar == undefined
-          ) {
-            AIFleet[i].location = [];
-            placement = false;
-          } else {
-            AIFleet[i].location.push(updatedChar + randomPlacement);
-            tempChar++;
-            placement = true;
-          }
-        }
-      }
-
-      console.table(AIFleet[i].location);
-    } while (
-      !shipPlaced(), AIFleet[i].location.length == 0)
-    ;
-  }
-}
-
-export { makePlayerBoard, makeAIBoard, placeShips, checkSpace };
+export { makePlayerBoard, makeAIBoard, shipsPlaced };

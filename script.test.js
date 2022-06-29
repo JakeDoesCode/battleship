@@ -1,5 +1,5 @@
 import { playerFleet, AIFleet } from './src/index';
-import { checkSpace } from './src/modules/gameBoard';
+import { shipsPlaced } from './src/modules/gameBoard';
 
 test('Battleship afloat', () => {
   expect(playerFleet[1].shipSink).toBeFalsy();
@@ -23,13 +23,6 @@ test('Player Patrol Boat alive', () => {
 test('Battleship struck twice', () => {
   expect(AIFleet[1].shipHit).toBe(2);
 });
-test('Space Occupied', () => {
-  expect(checkSpace('F1')).toBeTruthy();
-});
-
-test('Space Not Occupied', () => {
-  expect(checkSpace('F8')).toBeFalsy();
-});
-test('Space Occupied', () => {
-  expect(checkSpace('I10')).toBeFalsy();
+test('AI Fleet position set', () => {
+  expect(shipsPlaced()).toBeTruthy();
 });
