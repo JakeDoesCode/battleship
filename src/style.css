@@ -57,6 +57,20 @@
 .tile:hover {
   background-color: lightblue;
 }
-.h{
+.hit{
   background-color: red;
+}
+.miss{
+  background-color: grey;
+}
+.playerShipDisplay{
+  font-size: 2em;
+  width: 50%;
+}
+.AIShipDisplay{
+  font-size: 2em;
+  width: 50%;
+}
+button{
+  font-size: 1.5em;
 }

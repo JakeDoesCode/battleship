@@ -6,61 +6,71 @@ function makePlayerBoard() {
   for (let i = 1; i < 11; i++) {
     const tile = document.createElement('div');
     tile.classList.add('tile');
-    tile.setAttribute('id', 'Player' + 'A' + i);
+    tile.setAttribute('id', 'player' + 'A' + i);
+    tile.setAttribute('data','player')
     board.appendChild(tile);
   }
   for (let i = 1; i < 11; i++) {
     const tile = document.createElement('div');
     tile.classList.add('tile');
-    tile.setAttribute('id', 'Player' + 'B' + i);
+    tile.setAttribute('id', 'player' + 'B' + i);
+    tile.setAttribute('data','player')
     board.appendChild(tile);
   }
   for (let i = 1; i < 11; i++) {
     const tile = document.createElement('div');
     tile.classList.add('tile');
-    tile.setAttribute('id', 'Player' + 'C' + i);
+    tile.setAttribute('id', 'player' + 'C' + i);
+    tile.setAttribute('data','player')
     board.appendChild(tile);
   }
   for (let i = 1; i < 11; i++) {
     const tile = document.createElement('div');
     tile.classList.add('tile');
-    tile.setAttribute('id', 'Player' + 'D' + i);
+    tile.setAttribute('id', 'player' + 'D' + i);
+    tile.setAttribute('data','player')
     board.appendChild(tile);
   }
   for (let i = 1; i < 11; i++) {
     const tile = document.createElement('div');
     tile.classList.add('tile');
-    tile.setAttribute('id', 'Player' + 'E' + i);
+    tile.setAttribute('id', 'player' + 'E' + i);
+    tile.setAttribute('data','player')
     board.appendChild(tile);
   }
   for (let i = 1; i < 11; i++) {
     const tile = document.createElement('div');
     tile.classList.add('tile');
-    tile.setAttribute('id', 'Player' + 'F' + i);
+    tile.setAttribute('id', 'player' + 'F' + i);
+    tile.setAttribute('data','player')
     board.appendChild(tile);
   }
   for (let i = 1; i < 11; i++) {
     const tile = document.createElement('div');
     tile.classList.add('tile');
-    tile.setAttribute('id', 'Player' + 'G' + i);
+    tile.setAttribute('id', 'player' + 'G' + i);
+    tile.setAttribute('data','player')
     board.appendChild(tile);
   }
   for (let i = 1; i < 11; i++) {
     const tile = document.createElement('div');
     tile.classList.add('tile');
-    tile.setAttribute('id', 'Player' + 'H' + i);
+    tile.setAttribute('id', 'player' + 'H' + i);
+    tile.setAttribute('data','player')
     board.appendChild(tile);
   }
   for (let i = 1; i < 11; i++) {
     const tile = document.createElement('div');
     tile.classList.add('tile');
-    tile.setAttribute('id', 'Player' + 'I' + i);
+    tile.setAttribute('id', 'player' + 'I' + i);
+    tile.setAttribute('data','player')
     board.appendChild(tile);
   }
   for (let i = 1; i < 11; i++) {
     const tile = document.createElement('div');
     tile.classList.add('tile');
-    tile.setAttribute('id', 'Player' + 'J' + i);
+    tile.setAttribute('id', 'player' + 'J' + i);
+    tile.setAttribute('data','player')
     board.appendChild(tile);
   }
 }
@@ -139,5 +149,6 @@ function makeAIBoard() {
     board.appendChild(tile);
   }
 }
+
 
 export { makePlayerBoard, makeAIBoard};
