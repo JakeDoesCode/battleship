@@ -74,3 +74,9 @@
 button{
   font-size: 1.5em;
 }
+[data="player"].potentialPlaceShip{
+  background-color: rgb(35, 214, 15);
+}
+.placedShip{
+  background-color: darkgreen;
+}

@@ -3,10 +3,13 @@ import { newFleet } from './modules/shipFactory';
 import {
   placeAIShips,
   userClick,
-  playerTileSelect
+  playerTileSelect,
+  placePlayer,
+  placePlayerFleet,
+  
 } from './modules/gameplay';
 
-const playerFleet = newFleet();
+let playerFleet = newFleet();
 let AIFleet = newFleet();
 
 
@@ -14,7 +17,8 @@ makePlayerBoard();
 makeAIBoard();
 placeAIShips()
 userClick();
-playerTileSelect()
+placePlayerFleet()
+
 //! FOR TESTS
 
 

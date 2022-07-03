@@ -6,8 +6,8 @@ let randomPlacement = Math.floor(Math.random() * 10 + 1).toString();
 let randomChar = letters[Math.floor(Math.random() * letters.length)];
 let selectedTiles = [];
 let playerTurn = true;
- 
-
+let placementPhase = true;
+let gamePhase = false;
 
 function swapTurn() {
   playerTurn = !playerTurn;
@@ -112,29 +112,31 @@ function userClick() {
   tile.forEach((tile) => {
     tile.addEventListener('click', (e) => {
       let domSelected = document.getElementById(e.target.id);
-      if (selectedTiles.includes(domSelected.id)) {
-        alert('Please Select a valid tile');
-      } else if (!selectedTiles.includes(domSelected.id)) {
-        selectedTiles.push(domSelected.id);
-        for (let l in AIFleet) {
-          if (
-            AIFleet[l].location.includes(
-              selectedTiles[selectedTiles.length - 1]
-            )
-          ) {
-            AIFleet[l].hit();
-            console.log('hit');
-            domSelected.classList.add('hit');
-            if (AIFleet[l].shipHit == AIFleet[l].shipHealth) {
-              AIFleet[l].sunk();
-              endGame();
+      if (playerTurn) {
+        if (selectedTiles.includes(domSelected.id)) {
+          alert('Please Select a valid tile');
+        } else if (!selectedTiles.includes(domSelected.id)) {
+          selectedTiles.push(domSelected.id);
+          for (let l in AIFleet) {
+            if (
+              AIFleet[l].location.includes(
+                selectedTiles[selectedTiles.length - 1]
+              )
+            ) {
+              AIFleet[l].hit();
+              console.log('hit');
+              domSelected.classList.add('hit');
+              if (AIFleet[l].shipHit == AIFleet[l].shipHealth) {
+                AIFleet[l].sunk();
+                endGame();
+              }
             }
           }
         }
-      }
-      if (!domSelected.classList.contains('hit')) {
-        domSelected.classList.add('miss');
-        swapTurn()
+        if (!domSelected.classList.contains('hit')) {
+          domSelected.classList.add('miss');
+          swapTurn();
+        }
       }
     });
   });
@@ -173,10 +175,14 @@ function resetGame() {
   tile.forEach((tile) => {
     tile.classList.remove('hit');
     tile.classList.remove('miss');
+    tile.classList.remove('placedShip');
   });
   selectedTiles = [];
-  for(let i =0; i< AIFleet.length;i++){
-    AIFleet[i].shipHit = 0
+  for (let i = 0; i < AIFleet.length; i++) {
+    AIFleet[i].shipHit = 0;
+  }
+  for (let i = 0; i < playerFleet.length; i++) {
+    playerFleet[i].shipHit = 0;
   }
   placeAIShips();
 }
@@ -189,27 +195,139 @@ function checkPlacement(args) {
   }
   return false;
 }
- let rotate=  document.getElementById('rotate')
- let horizontal = true
+let rotate = document.getElementById('rotate');
+let horizontal = true;
 
-  rotate.addEventListener('click', () => {
-  horizontal = !horizontal
-  console.log(horizontal)
-  })
+rotate.addEventListener('click', () => {
+  horizontal = !horizontal;
+});
 
-function playerTileSelect(){
-  const tile = document.querySelectorAll('[data=player]');
-  tile.forEach((tile) => {
-    tile.addEventListener('click', (e) => {
-    let domSelected = document.getElementById(e.target.id);
-    let tempArr = domSelected.id.split('')
-    let char = tempArr[6]
-    let num = tempArr[7]
-    console.log(char+num)
-  })})
-  
+// ! Functions needed
+// ! playerPlace, AITurn,
+
+// / player selects tile. on hover show where ship will be placed. if horizontal, add to end number for shipHealth
+// if vertical, add to letters.indexof
+
+// on click, place the ship in the appropriate spot.
+// function playerTileSelect() {
+//   const tile = document.querySelectorAll('[data=player]');
+//   tile.forEach((tile) => {
+//     tile.addEventListener('click', (e) => {
+//       let domSelected = document.getElementById(e.target.id);
+//       let tempArr = domSelected.id.split('');
+//       let char = tempArr[6];
+//       let num = tempArr[7];
+//       let selected = char+num
+//       return selected
+//     });
+//   });
+// }
+
+function placePlayer(ship) {
+  const playerTile = document.querySelectorAll('[data=player]');
+  let shipSet = false;
+
+  playerTile.forEach((playerTile) => {
+    playerTile.addEventListener('mouseover', (e) => {
+      let domSelected = document.getElementById(e.target.id);
+      let tempArr = domSelected.id.split('');
+      let num = tempArr[7];
+      let char = tempArr[6];
+      let tempChar = letters.indexOf(char);
+      if (horizontal) {
+        if (tempArr.length == 9) {
+          num = '10';
+        }
+        for (let i = 0; i < ship.shipHealth; i++) {
+          let potentialPlace = document.getElementById('player' + char + num++);
+          potentialPlace.classList.add('potentialPlaceShip');
+        }
+      } else if (!horizontal) {
+        if (tempArr.length == 9) {
+          num = '10';
+        }
+        for (let i = 0; i < ship.shipHealth; i++) {
+          let updatedChar = letters[tempChar];
+          let potentialPlace = document.getElementById(
+            'player' + updatedChar + num
+          );
+          potentialPlace.classList.add('potentialPlaceShip');
+          tempChar++;
+        }
+      }
+    });
+  });
+
+  playerTile.forEach((playerTile) => {
+    playerTile.addEventListener('mouseout', (e) => {
+      let domSelected = document.getElementById(e.target.id);
+      let tempArr = domSelected.id.split('');
+      let char = tempArr[6];
+      let num = tempArr[7];
+      let tempChar = letters.indexOf(char);
+      if (horizontal) {
+        if (tempArr.length == 9) {
+          num = '10';
+        }
+        for (let i = 0; i < ship.shipHealth; i++) {
+          let potentialPlace = document.getElementById('player' + char + num++);
+          potentialPlace.classList.remove('potentialPlaceShip');
+        }
+      } else if (!horizontal) {
+        for (let i = 0; i < ship.shipHealth; i++) {
+          if (tempArr.length == 9) {
+            num = '10';
+          }
+          let updatedChar = letters[tempChar];
+          let potentialPlace = document.getElementById(
+            'player' + updatedChar + num
+          );
+          potentialPlace.classList.remove('potentialPlaceShip');
+          tempChar++;
+        }
+      }
+    });
+  });
+  for (let i = 0; i < 1; i++) {}
+  playerTile.forEach((playerTile) => {
+    playerTile.addEventListener('click', (e) => {
+      let domSelected = document.getElementById(e.target.id);
+      let tempArr = domSelected.id.split('');
+      let char = tempArr[6];
+      let num = tempArr[7];
+      let tempChar = letters.indexOf(char);
+      if (horizontal && shipSet == false) {
+        if (tempArr.length == 9) {
+          num = '10';
+        }
+        for (let i = 0; i < ship.shipHealth; i++) {
+          let placedShip = document.getElementById('player' + char + num);
+          ship.location.push(char + num++);
+          placedShip.classList.add('placedShip');
+        }
+        shipSet = true;
+      } else if (!horizontal && shipSet == false) {
+        for (let i = 0; i < ship.shipHealth; i++) {
+          if (tempArr.length == 9) {
+            num = '10';
+          }
+          if (tempChar <= '9') {
+            let updatedChar = letters[tempChar];
+            ship.location.push(updatedChar + num);
+            let placedShip = document.getElementById(
+              'player' + updatedChar + num
+            );
+            placedShip.classList.add('placedShip');
+            tempChar++;
+          }
+        }
+        shipSet = true;
+      }
+    });
+  });
 }
 
-
-
-export { placeAIShips, checkSpace, shipsPlaced, userClick, playerTileSelect };
+function placePlayerFleet() {
+  placePlayer(playerFleet[0]);
+}
+export { placeAIShips, checkSpace, shipsPlaced, userClick, placePlayerFleet };
