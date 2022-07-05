@@ -1,5 +1,7 @@
 import { AIFleet, playerFleet } from '..';
 
+
+
 //variables
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 let randomPlacement = Math.floor(Math.random() * 10 + 1).toString();
@@ -100,26 +102,30 @@ function placeAIFleet() {
   placeAIShip(AIFleet[3]);
   placeAIShip(AIFleet[4]);
 }
-// on userClick on the AI side of the board, will check if tile has already been selected
-//if not it will add the selected tile id to an array of "selected tiles"
-// loops through all AI ships to determine if the most recently selected tile id is part of the ships location
-// if yes, call hit function to add to ships hit counter. then checks to see if shipHit is == to shipHealth
-// if yes, ship is sunk. if ship is sunk endGame function determines if win conditions are met (i.e. all ships
-// are shipSunk == true)
-//if the most recently selected tile does not match any ship location, and no hit is called, will add "miss"
-// to selected tile
 
+//basic game loop. in game phase user can click, if the location is included in the AIFleet[i]'s loc
+//arr, it will register as a hit
+// if user selects a tile which has alread been selected, a prompt is given asking the user to select a valid tile
+// if the the user selects a place occupied by AIFleet, the ship is hit. One is added to it's hit counter
+// if the ship is sunk (shipHit counter matches shipHealth), the shipSunk becomes true
+//  endGame runs, which checks to see if all ships in the fleet have been sunk.
+// if yes, win message is displayed, if a ship is hit, but win conditions are not met, the player goes again
+// once the player misses, the swap turn and AI turn function is called
 function userClick() {
+  let playerHit = true
   if(gamePhase){
   const tile = document.querySelectorAll('[data=AI]');
+  let valid = true
   tile.forEach((tile) => {
     tile.addEventListener('click', (e) => {
       let domSelected = document.getElementById(e.target.id);
       if (playerTurn) {
         if (selectedTiles.includes(domSelected.id)) {
           alert('Please Select a valid tile');
+          valid = false
         } else if (!selectedTiles.includes(domSelected.id)) {
           selectedTiles.push(domSelected.id);
+          valid = true
           for (let l in AIFleet) {
             if (
               AIFleet[l].location.includes(
@@ -129,22 +135,29 @@ function userClick() {
               AIFleet[l].hit();
               console.log('hit');
               domSelected.classList.add('hit');
+              playerHit = true
+              
               if (AIFleet[l].shipHit == AIFleet[l].shipHealth) {
                 AIFleet[l].sunk();
                 endGame();
               }
             }
           }
-        }
-        if (!domSelected.classList.contains('hit')) {
+        }if (!domSelected.classList.contains('hit')) {
           domSelected.classList.add('miss');
-          swapTurn();
+          playerHit = false
+        }}if(!playerHit&&valid){
+          swapTurn()
           AITurn()
         }
-      }
+
+      
     });
   });
-  }}
+  } 
+  }
+
+
 
 function AITurn() {
 let coordinate = newLetter() + newNum();
@@ -154,7 +167,6 @@ do{
   if (!playerTurn && !AISelectedTiles.includes(coordinate)) {
     AISelectedTiles.push(coordinate); 
     AIValid = true
-    console.log(AISelectedTiles)
   }else if(AISelectedTiles.includes(coordinate)){
     coordinate = newLetter()+newNum()
   }}while(!AIValid)
@@ -211,7 +223,7 @@ function endGame() {
     alert('AI wins. Computers are our masters now.');
   }
 }
-//reset resets AI
+//reset resets AI and Player board, fleet location, and ship counter
 function resetGame() {
   const tile = document.querySelectorAll('.tile');
   tile.forEach((tile) => {
