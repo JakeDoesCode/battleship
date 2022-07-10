@@ -1,8 +1,8 @@
 import { get } from 'lodash';
 import { AIFleet, playerFleet } from '..';
 
+// removing placedShip if invalid placement
 
-// ! check tile function for player placement, remove (placedShip) and add hit for when AI hits target 
 //variables
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 let randomPlacement = Math.floor(Math.random() * 10 + 1).toString();
@@ -104,14 +104,6 @@ function placeAIFleet() {
   placeAIShip(AIFleet[4]);
 }
 
-//basic game loop. in game phase user can click, if the location is included in the AIFleet[i]'s loc
-//arr, it will register as a hit
-// if user selects a tile which has alread been selected, a prompt is given asking the user to select a valid tile
-// if the the user selects a place occupied by AIFleet, the ship is hit. One is added to it's hit counter
-// if the ship is sunk (shipHit counter matches shipHealth), the shipSunk becomes true
-//  endGame runs, which checks to see if all ships in the fleet have been sunk.
-// if yes, win message is displayed, if a ship is hit, but win conditions are not met, the player goes again
-// once the player misses, the swap turn and AI turn function is called
 function userClick() {
   let playerHit = true;
 
@@ -159,15 +151,22 @@ function userClick() {
 }
 
 function AITurn() {
-  let coordinate = newLetter() + newNum();
-  let selectedCoordinate = document.getElementById('player' + coordinate);
+  let num = newNum();
+  let letter = newLetter();
+  let selectedCoordinate = document.getElementById(
+    'player,' + letter + ',' + num
+  );
   let AIValid = false;
   do {
-    if (!playerTurn && !AISelectedTiles.includes(coordinate)) {
-      AISelectedTiles.push(coordinate);
+    if (!playerTurn && !AISelectedTiles.includes(letter + num)) {
+      AISelectedTiles.push(letter + num);
       AIValid = true;
-    } else if (AISelectedTiles.includes(coordinate)) {
-      coordinate = newLetter() + newNum();
+    } else if (AISelectedTiles.includes(letter + num)) {
+      letter = newLetter();
+      num = newNum();
+      selectedCoordinate = document.getElementById(
+        'player,' + letter + ',' + num
+      );
     }
   } while (!AIValid);
   for (let l in playerFleet) {
@@ -241,7 +240,7 @@ function resetGame() {
   placeAIFleet();
 }
 
-function checkPlacement(...args) {
+function checkPlacement(args) {
   for (let i = 0; i < args.length; i++) {
     for (let j = 0; j < playerFleet.length; j++) {
       if (playerFleet[j].location.includes(args[i])) return true;
@@ -256,48 +255,41 @@ let horizontal = true;
 rotate.addEventListener('click', () => {
   horizontal = !horizontal;
 });
-
+// if contains placedShip do nothing
 function playerPlaceShip(ship, grid) {
   let playerShipPlaced;
-  let tempArr = grid.split('');
-  let char = tempArr[6];
-  let number;
+  let tempArr = grid.split(',');
+  let char = tempArr[1];
+  let number = tempArr[2];
   let index = letters.indexOf(char);
-
-  if (tempArr.length > 9) {
-    number = '10';
-  } else {
-    number = tempArr[7];
-  }
-  if (
-    horizontal &&
-    !checkPlacement(playerFleet) &&
-    Number(number) + ship.shipHealth <= 10
-  ) {
+  if (horizontal && Number(number) + ship.shipHealth <= 11) {
     for (let i = 0; i < ship.shipHealth; i++) {
-      let domSpace = document.getElementById('player' + char + number);
-      domSpace.classList.add('placedShip');
-      ship.location.push(char + number++);
+      if (checkPlacement([char + number])) {
+        ship.location = [];
+        alert('Please select a valid space');
+        playerShipPlaced = false;
+        return playerShipPlaced;
+      } else if (!checkPlacement([char + number])) {
+        ship.location.push(char + number);
+        number++;
+      }
     }
     playerShipPlaced = true;
     return playerShipPlaced;
-  } else if (
-    !horizontal &&
-    !checkPlacement(playerFleet) &&
-    index + ship.shipHealth <= 10
-  ) {
+  } else if (!horizontal && index + ship.shipHealth <= 11) {
     for (let i = 0; i < ship.shipHealth; i++) {
       let newChar = letters[index];
-      ship.location.push(newChar + number);
-      let domSpace = document.getElementById('player' + newChar + number);
-      domSpace.classList.add('placedShip');
-      index++;
+      if (checkPlacement([newChar + number])) {
+        ship.location = [];
+        alert('Please select a valid space');
+        playerShipPlaced = false;
+        return playerShipPlaced;
+      } else if (!checkPlacement([newChar + number])) {
+        ship.location.push(newChar + number);
+        index++;
+      }
     }
     playerShipPlaced = true;
-    return playerShipPlaced;
-  } else if (checkPlacement(playerFleet)) {
-    alert('Please select a valid space');
-    playerShipPlaced = false;
     return playerShipPlaced;
   }
 }
@@ -315,6 +307,15 @@ function playerSelect() {
           if (playerFleet[0].location.length < 5) {
             console.log(selectedTile);
             playerPlaceShip(playerFleet[0], selectedTile);
+            playerFleet[0].location.forEach((square) => {
+              let idArr = square.split('');
+              let char = idArr[0];
+              let num = idArr[1];
+              let domSelected = document.getElementById(
+                'player' + ',' + char + ',' + num
+              );
+              domSelected.classList.add('placedShip');
+            });
             console.log(playerFleet[0].location);
           } else if (
             playerFleet[0].location.length == 5 &&
@@ -322,6 +323,15 @@ function playerSelect() {
           ) {
             console.log(selectedTile);
             playerPlaceShip(playerFleet[1], selectedTile);
+            playerFleet[1].location.forEach((square) => {
+              let idArr = square.split('');
+              let char = idArr[0];
+              let num = idArr[1];
+              let domSelected = document.getElementById(
+                'player' + ',' + char + ',' + num
+              );
+              domSelected.classList.add('placedShip');
+            });
             console.log(playerFleet[1].location);
           } else if (
             playerFleet[0].location.length == 5 &&
@@ -330,6 +340,15 @@ function playerSelect() {
           ) {
             console.log(selectedTile);
             playerPlaceShip(playerFleet[2], selectedTile);
+            playerFleet[2].location.forEach((square) => {
+              let idArr = square.split('');
+              let char = idArr[0];
+              let num = idArr[1];
+              let domSelected = document.getElementById(
+                'player' + ',' + char + ',' + num
+              );
+              domSelected.classList.add('placedShip');
+            });
             console.log(playerFleet[2].location);
           } else if (
             playerFleet[0].location.length == 5 &&
@@ -339,6 +358,15 @@ function playerSelect() {
           ) {
             console.log(selectedTile);
             playerPlaceShip(playerFleet[3], selectedTile);
+            playerFleet[3].location.forEach((square) => {
+              let idArr = square.split('');
+              let char = idArr[0];
+              let num = idArr[1];
+              let domSelected = document.getElementById(
+                'player' + ',' + char + ',' + num
+              );
+              domSelected.classList.add('placedShip');
+            });
             console.log(playerFleet[3].location);
           } else if (
             playerFleet[0].location.length == 5 &&
@@ -349,6 +377,15 @@ function playerSelect() {
           ) {
             console.log(selectedTile);
             playerPlaceShip(playerFleet[4], selectedTile);
+            playerFleet[4].location.forEach((square) => {
+              let idArr = square.split('');
+              let char = idArr[0];
+              let num = idArr[1];
+              let domSelected = document.getElementById(
+                'player' + ',' + char + ',' + num
+              );
+              domSelected.classList.add('placedShip');
+            });
             console.log(playerFleet[4].location);
             endPhase();
           }

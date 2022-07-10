@@ -58,7 +58,7 @@
   background-color: lightblue;
 }
 .hit{
-  background-color: red;
+  background-color: red !important;
 }
 .miss{
   background-color: grey;
